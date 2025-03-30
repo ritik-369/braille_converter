@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Audio Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .audio-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .error-msg {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">Image to Audio Converter</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="imageUpload" class="form-label">Upload an Image:</label>
+            {{ form.image }}
+        </div>
+        <button type="submit" class="btn btn-primary">Convert</button>
+    </form>
+
+    {% if error %}
+    <p class="error-msg mt-3">{{ error }}</p>
+    {% endif %}
+
+    {% if audio_file %}
+    <div class="audio-container">
+        <h4>Generated Audio:</h4>
+        <audio controls>
+            <!-- <source src="../../../media/audio_files/audio_output.mp3" type="audio/mpeg"> -->
+            <source src="{{ MEDIA_URL }}{{ audio_file }}" type="audio/mpeg">
+
+            Your browser does not support the audio tag.
+        </audio>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
