@@ -23,3 +23,6 @@ def get_llm_response(<br>
     """<br>
 <br>
     HUGGINGFACE_API_KEY = "API_KEY_HERE" # Replace with your actual API key   <<<<<<<<<<<<<<<<<<<<<<HERE
+
+
+hugging-face-site-for api = https://huggingface.co/settings/tokens/new?tokenType=read
