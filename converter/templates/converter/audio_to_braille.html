@@ -1,0 +1,1025 @@
+
+
+
+<!-- --------------------------------------------------------------------------------- -->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Audio Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f9fafb;
+            --accent: #8b5cf6;
+            --text: #1f2937;
+            --light-text: #6b7280;
+            --border: #e5e7eb;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+        
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+        }
+        
+        .converter-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-title i {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            transition: color 0.2s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .back-link i {
+            margin-right: 0.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* File upload styling */
+        .file-upload-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--border);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload-text {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-upload-hint {
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-preview {
+            display: none;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .file-name {
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        
+        /* Audio player styling */
+        .audio-container {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+        
+        .audio-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .audio-title i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        audio {
+            width: 100%;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Custom audio player */
+        .custom-audio-player {
+            background: var(--secondary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .play-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .play-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .play-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .audio-info {
+            flex: 1;
+            margin-left: 1rem;
+            text-align: left;
+        }
+        
+        .audio-time {
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+        
+        .audio-progress {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .audio-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 0%;
+        }
+        
+        /* Error message */
+        .error-msg {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-msg i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Loading spinner */
+        .spinner-container {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner-border {
+            color: var(--primary);
+            width: 2rem;
+            height: 2rem;
+        }
+        
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .toast-success {
+            border-left: 4px solid #10b981;
+        }
+        
+        .toast-icon {
+            margin-right: 0.75rem;
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+        
+        .toast-message {
+            font-weight: 500;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+                :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f9fafb;
+            --accent: #8b5cf6;
+            --text: #1f2937;
+            --light-text: #6b7280;
+            --border: #e5e7eb;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Add navigation styles */
+        .auth-nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+        }
+        
+        .auth-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .auth-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .auth-btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .auth-btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .auth-btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Rest of your existing styles remain the same */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <nav class="auth-nav">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-universal-access"></i>
+                <span>Drishyam</span>
+            </a>
+            
+            <div class="auth-links">
+                {% if user.is_authenticated %}
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <a href="{% url 'profile' %}" class="auth-btn auth-btn-outline">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a>
+                    <a href="{% url 'logout' %}" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="auth-btn auth-btn-outline">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="{% url 'signup' %}" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- ----------------------------------------------------------------- -->
+
+<div class="main-container">
+    <div class="converter-card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-microphone"></i>Audio to Braille Converter
+            </h1>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-4" id="audioTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab">
+                        <i class="fas fa-upload me-2"></i>Upload Audio
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="record-tab" data-bs-toggle="tab" data-bs-target="#record-tab-pane" type="button" role="tab">
+                        <i class="fas fa-microphone me-2"></i>Live Recording
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="audioTabContent">
+                <!-- Upload Audio Tab -->
+                <div class="tab-pane fade show active" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="audio_source" value="upload">
+                        
+                        <div class="file-upload-container">
+                            <label for="audioUpload" class="file-upload-label">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="file-upload-text">Drag & Drop or Click to Upload</div>
+                                <div class="file-upload-hint">Supports WAV, MP3, FLAC, OGG (Max 10MB)</div>
+                            </label>
+                            {{ form.audio_file }}
+                        </div>
+                        
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-name" id="fileName"></div>
+                            <audio controls id="audioPreview" class="mt-2 w-100"></audio>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mt-3" id="uploadBtn">
+                            <i class="fas fa-braille me-2"></i>Convert to Braille
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Recording Tab -->
+                <div class="tab-pane fade" id="record-tab-pane" role="tabpanel" aria-labelledby="record-tab">
+                    <form method="POST" id="recordForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="audio_source" value="record">
+                        <input type="hidden" name="audio_data" id="audioData">
+                        
+                        <div class="recording-container text-center">
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-danger rounded-circle p-3" id="recordBtn">
+                                    <i class="fas fa-microphone fa-2x"></i>
+                                </button>
+                            </div>
+                            <div id="recordingStatus" class="text-muted mb-3">
+                                Click microphone to start recording
+                            </div>
+                            <div class="audio-visualization mb-3">
+                                <canvas id="audioVisualizer" width="300" height="80" style="background: #f8f9fa; border-radius: 4px;"></canvas>
+                            </div>
+                            <audio controls id="recordedAudio" class="w-100 mb-3" style="display: none;"></audio>
+                            
+                            <button type="submit" class="btn btn-primary w-100" id="recordSubmitBtn" disabled>
+                                <i class="fas fa-braille me-2"></i>Convert to Braille
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="spinner-container" id="loadingSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Processing your audio and generating braille...</p>
+            </div>
+
+            {% if error %}
+            <div class="error-msg">
+                <i class="fas fa-exclamation-circle"></i>{{ error }}
+            </div>
+            {% endif %}
+
+            {% if extracted_text %}
+            <div class="result-container mt-4">
+                <h3 class="result-title">
+                    <i class="fas fa-font"></i>Extracted Text:
+                </h3>
+                <div class="p-3 bg-light rounded">
+                    {{ extracted_text }}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if braille_text %}
+            <div class="result-container mt-4">
+                <h3 class="result-title">
+                    <i class="fas fa-braille"></i>Braille Output:
+                </h3>
+                <div class="p-3 bg-light rounded font-monospace" style="font-size: 1.5rem; line-height: 2.5rem;">
+                    {{ braille_text }}
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-outline-primary" onclick="copyToClipboard()">
+                        <i class="fas fa-copy me-2"></i>Copy Braille
+                    </button>
+                    <a href="data:text/plain;charset=utf-8,{{ braille_text|urlencode }}" download="braille_output.txt" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-download me-2"></i>Download
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <a href="../" class="back-link">
+        <i class="fas fa-arrow-left"></i>Back to Conversion Menu
+    </a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Common elements
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const toastContainer = document.getElementById('toastContainer');
+    
+    // Upload form elements
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const audioUpload = document.getElementById('id_audio_file');
+    const filePreview = document.getElementById('filePreview');
+    const audioPreview = document.getElementById('audioPreview');
+    const fileName = document.getElementById('fileName');
+    
+    // Recording form elements
+    const recordForm = document.getElementById('recordForm');
+    const recordBtn = document.getElementById('recordBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
+    const recordedAudio = document.getElementById('recordedAudio');
+    const recordSubmitBtn = document.getElementById('recordSubmitBtn');
+    const audioData = document.getElementById('audioData');
+    const audioVisualizer = document.getElementById('audioVisualizer');
+    
+    // Audio visualization
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let analyser, dataArray, canvasCtx, isRecording = false;
+    let mediaRecorder, audioChunks = [];
+    
+    // Initialize visualizer
+    if (audioVisualizer) {
+        canvasCtx = audioVisualizer.getContext('2d');
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            analyser.getByteFrequencyData(dataArray);
+            
+            canvasCtx.fillStyle = 'rgb(248, 249, 250)';
+            canvasCtx.fillRect(0, 0, audioVisualizer.width, audioVisualizer.height);
+            
+            const barWidth = (audioVisualizer.width / bufferLength) * 2.5;
+            let x = 0;
+            
+            for (let i = 0; i < bufferLength; i++) {
+                const barHeight = dataArray[i] / 2;
+                canvasCtx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+                canvasCtx.fillRect(x, audioVisualizer.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+        
+        drawVisualizer();
+    }
+    
+    // File upload preview
+    if (audioUpload) {
+        audioUpload.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Check file size (max 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('File is too large. Maximum size is 10MB.', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                const validTypes = ['audio/wav', 'audio/mpeg', 'audio/flac', 'audio/ogg', 'audio/x-wav', 'audio/x-mpeg-3'];
+                if (!validTypes.includes(file.type)) {
+                    showToast('Invalid file type. Please upload WAV, MP3, FLAC, or OGG.', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                fileName.textContent = file.name;
+                audioPreview.src = URL.createObjectURL(file);
+                filePreview.style.display = 'block';
+            }
+        });
+    }
+    
+    // Upload form submission
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            if (!audioUpload.files || !audioUpload.files[0]) {
+                e.preventDefault();
+                showToast('Please select an audio file to upload.', 'error');
+                return false;
+            }
+            
+            uploadBtn.disabled = true;
+            loadingSpinner.style.display = 'block';
+        });
+    }
+    
+    // Recording functionality
+    if (recordBtn) {
+        recordBtn.addEventListener('click', toggleRecording);
+    }
+    
+    async function toggleRecording() {
+        if (!isRecording) {
+            // Start recording
+            try {
+                audioChunks = [];
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                // Connect to visualizer
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+                
+                mediaRecorder.ondataavailable = function(e) {
+                    audioChunks.push(e.data);
+                };
+                
+                mediaRecorder.onstop = function() {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    recordedAudio.src = audioUrl;
+                    recordedAudio.style.display = 'block';
+                    
+                    // Convert blob to base64 for form submission
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = function() {
+                        audioData.value = reader.result.split(',')[1]; // Remove data URL prefix
+                    };
+                    
+                    recordSubmitBtn.disabled = false;
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.classList.add('pulse');
+                recordingStatus.innerHTML = '<i class="fas fa-circle text-danger me-2"></i>Recording... Click to stop';
+            } catch (err) {
+                showToast('Error accessing microphone: ' + err.message, 'error');
+                console.error('Microphone access error:', err);
+            }
+        } else {
+            // Stop recording
+            mediaRecorder.stop();
+            isRecording = false;
+            recordBtn.classList.remove('pulse');
+            recordingStatus.textContent = 'Recording complete. Click microphone to re-record';
+            
+            // Stop all tracks
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
+    }
+    
+    // Record form submission
+if (recordForm) {
+    recordForm.addEventListener('submit', function(e) {
+        if (!audioData.value) {
+            e.preventDefault();
+            showToast('Please record some audio first.', 'error');
+            return false;
+        }
+        
+        // Show loading spinner
+        recordSubmitBtn.disabled = true;
+        loadingSpinner.style.display = 'block';
+        
+        // Convert blob to base64 if not already done
+        if (!audioData.value && recordedAudio.src) {
+            e.preventDefault();
+            fetch(recordedAudio.src)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = function() {
+                        audioData.value = reader.result.split(',')[1];
+                        recordForm.submit();
+                    };
+                });
+            return false;
+        }
+    });
+}
+    
+    // Copy to clipboard function
+    function copyToClipboard() {
+        const brailleText = document.querySelector('.font-monospace').innerText;
+        navigator.clipboard.writeText(brailleText).then(() => {
+            showToast('Braille text copied to clipboard!', 'success');
+        });
+    }
+    
+    // Toast notification function
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Remove toast after 3 seconds
+        setTimeout(function() {
+            toast.style.animation = 'slideOut 0.3s ease-out forwards';
+            setTimeout(function() {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Drag and drop functionality for upload
+    const uploadLabel = document.querySelector('.file-upload-label');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        uploadLabel.classList.add('border-primary');
+        uploadLabel.style.backgroundColor = 'rgba(99, 102, 241, 0.05)';
+    }
+    
+    function unhighlight() {
+        uploadLabel.classList.remove('border-primary');
+        uploadLabel.style.backgroundColor = '';
+    }
+    
+    uploadLabel.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files && files.length) {
+            audioUpload.files = files;
+            
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            audioUpload.dispatchEvent(event);
+        }
+    }
+    
+    // Add pulse animation for recording button
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+<style>
+    /* Additional styles for the recording interface */
+    .recording-container {
+        padding: 1.5rem;
+    }
+    
+    #recordBtn {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    #recordBtn:hover {
+        transform: scale(1.05);
+    }
+    
+    #recordingStatus {
+        font-weight: 500;
+        min-height: 24px;
+    }
+    
+    .audio-visualization {
+        margin: 1rem 0;
+    }
+    
+    .result-container {
+        margin-top: 2rem;
+        border-top: 1px solid var(--border);
+        padding-top: 1.5rem;
+    }
+    
+    .result-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .result-title i {
+        margin-right: 0.5rem;
+        color: var(--primary);
+    }
+    
+    .nav-tabs {
+        border-bottom: 2px solid var(--border);
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: var(--light-text);
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--primary);
+        border-bottom: 3px solid var(--primary);
+        background-color: transparent;
+    }
+    
+    .nav-tabs .nav-link:hover:not(.active) {
+        color: var(--primary-dark);
+    }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drishyam - Accessibility Conversion Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/media/style.css">
+
+</head>
+<body>
+    <div class="bubbles">
+        <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div>
+        <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div>
+        <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div>
+    </div>
+
+    <button class="theme-sidebar-toggle-btn" id="openThemeSidebarBtn" aria-label="Open Theme Settings">
+        <i class="fas fa-palette"></i>
+    </button>
+
+    <div class="theme-sidebar" id="themeSidebar">
+        <button class="theme-sidebar-close-btn" id="closeThemeSidebarBtn" aria-label="Close Theme Settings">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>Choose Theme</h3>
+        <button class="theme-option" data-theme="theme-original">Original</button>
+        <button class="theme-option" data-theme="theme-neon">Futuristic Neon</button>
+        <button class="theme-option" data-theme="theme-eco-tech">Serene Nature</button>
+        <button class="theme-option" data-theme="theme-monochrome">Minimalist Monochrome</button>
+        <button class="theme-option" data-theme="theme-vibrant-gradient">Vibrant Gradient</button>
+    </div>
+
+
+    <nav class="auth-nav">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-universal-access"></i>
+                <span>Drishyam</span>
+            </a>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="auth-links" id="authLinks">
+                 <button class="mobile-menu-toggle" id="mobileMenuClose" style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem;" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+                {% if user.is_authenticated %}
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <a href="{% url 'profile' %}" class="auth-btn auth-btn-outline">
+                        <i class="fas fa-user-circle"></i> <span class="nav-button-text">Profile</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-sign-out-alt"></i> <span class="nav-button-text">Logout</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="auth-btn auth-btn-outline">
+                        <i class="fas fa-sign-in-alt"></i> <span class="nav-button-text">Login</span>
+                    </a>
+                    <a href="{% url 'signup' %}" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-user-plus"></i> <span class="nav-button-text">Sign Up</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-title">
+            <h1>Accessibility Conversion Tools</h1>
+            <p>Transform content between different formats to improve accessibility and reach a wider audience with our powerful conversion tools.</p>
+        </div>
+
+        <div class="conversion-grid">
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-font"></i></div>
+                    <h2 class="card-title">Text to Braille</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Convert standard text into Braille characters for visually impaired users. Supports multiple languages and Braille standards.
+                    </p>
+                    <a href="{% url 'text_to_braille' %}" class="card-link">
+                        <i class="fas fa-arrow-right me-2"></i>Convert Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-braille"></i></div>
+                    <h2 class="card-title">Braille to Text</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Translate Braille characters back into standard readable text with high accuracy. Perfect for educators and accessibility professionals.
+                    </p>
+                    <a href="{% url 'braille_to_text' %}" class="card-link">
+                        <i class="fas fa-arrow-right me-2"></i>Convert Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-image"></i></div>
+                    <h2 class="card-title">Image to Braille</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Extract text from images (JPG, PNG) and convert it to Braille characters automatically using advanced OCR technology.
+                    </p>
+                    <a href="{% url 'image_to_braille' %}" class="card-link">
+                        <i class="fas fa-arrow-right me-2"></i>Convert Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-volume-up"></i></div>
+                    <h2 class="card-title">Image to Audio</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Convert text from images into natural-sounding spoken audio with adjustable speed and voice options for better accessibility.
+                    </p>
+                    <a href="{% url 'image_to_audio' %}" class="card-link">
+                        <i class="fas fa-arrow-right me-2"></i>Convert Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-microphone"></i></div>
+                    <h2 class="card-title">Audio to Braille</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Convert spoken audio (MP3, WAV) into Braille characters with our advanced speech recognition technology for various needs.
+                    </p>
+                    <a href="{% url 'audio_to_braille' %}" class="card-link">
+                        <i class="fas fa-arrow-right me-2"></i>Convert Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="conversion-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
+                    <h2 class="card-title">AI Accessibility Assistant</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Interact with our AI assistant using text, audio upload, or live recording. Get responses in text, audio, or braille format.
+                    </p>
+                    <a href="{% url 'chatbot' %}" class="card-link">
+                        <i class="fas fa-comments me-2"></i>Start Chatting
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab pulse" title="Quick Help">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <footer class="footer">
+        <p>&copy; <span id="currentYear"></span> Drishyam Accessibility Tools. Making the digital world accessible for everyone.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            const menuClose = document.getElementById('mobileMenuClose');
+            const authLinks = document.getElementById('authLinks');
+
+            if (menuToggle && authLinks) {
+                menuToggle.addEventListener('click', () => {
+                    authLinks.classList.toggle('active');
+                    const isExpanded = authLinks.classList.contains('active');
+                    menuToggle.setAttribute('aria-expanded', isExpanded);
+                    if(isExpanded) {
+                        menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                    } else {
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            }
+            if (menuClose && authLinks) {
+                menuClose.addEventListener('click', () => {
+                    authLinks.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            }
+
+            // Card Animations
+            const cards = document.querySelectorAll('.conversion-card');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // FAB click
+            const fab = document.querySelector('.fab');
+            if (fab) {
+                fab.addEventListener('click', () => {
+                    alert('Need help? Contact our support team at support@drishyam.com or visit our help center.');
+                });
+            }
+            
+            // Update footer year
+            const yearSpan = document.getElementById('currentYear');
+            if(yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // --- THEME TOGGLER LOGIC ---
+            const themeSidebar = document.getElementById('themeSidebar');
+            const openThemeSidebarBtn = document.getElementById('openThemeSidebarBtn');
+            const closeThemeSidebarBtn = document.getElementById('closeThemeSidebarBtn');
+            const themeOptions = document.querySelectorAll('.theme-sidebar .theme-option');
+            const body = document.body;
+            const THEME_STORAGE_KEY = 'drishyamSelectedTheme';
+            const ALL_THEME_CLASSES = ['theme-original', 'theme-neon', 'theme-eco-tech', 'theme-monochrome', 'theme-vibrant-gradient']; // Add all theme classes here
+
+            function applyTheme(themeName) {
+                // Remove any existing theme classes from the body
+                ALL_THEME_CLASSES.forEach(cls => body.classList.remove(cls));
+
+                // Add the new theme class
+                if (themeName !== 'theme-original') { // 'theme-original' is the default (no extra class)
+                    body.classList.add(themeName);
+                }
+                
+                localStorage.setItem(THEME_STORAGE_KEY, themeName);
+
+                // Update active state on buttons
+                themeOptions.forEach(opt => {
+                    if (opt.dataset.theme === themeName) {
+                        opt.classList.add('active-theme');
+                    } else {
+                        opt.classList.remove('active-theme');
+                    }
+                });
+            }
+
+            function loadSavedTheme() {
+                const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+                if (savedTheme && ALL_THEME_CLASSES.includes(savedTheme)) {
+                    applyTheme(savedTheme);
+                } else {
+                    applyTheme('theme-original'); // Default theme
+                }
+            }
+
+            if (openThemeSidebarBtn && themeSidebar) {
+                openThemeSidebarBtn.addEventListener('click', () => {
+                    themeSidebar.classList.add('active');
+                });
+            }
+
+            if (closeThemeSidebarBtn && themeSidebar) {
+                closeThemeSidebarBtn.addEventListener('click', () => {
+                    themeSidebar.classList.remove('active');
+                });
+            }
+
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    applyTheme(option.dataset.theme);
+                   // themeSidebar.classList.remove('active'); // Optionally close sidebar on selection
+                });
+            });
+            
+            // Click outside to close sidebar (optional)
+            document.addEventListener('click', (event) => {
+                if (themeSidebar && themeSidebar.classList.contains('active') &&
+                    !themeSidebar.contains(event.target) && 
+                    openThemeSidebarBtn && !openThemeSidebarBtn.contains(event.target)) {
+                    themeSidebar.classList.remove('active');
+                }
+            });
+
+
+            loadSavedTheme(); // Load theme on initial page load
+        });
+    </script>
+</body>
+</html>

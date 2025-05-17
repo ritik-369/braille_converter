@@ -1,0 +1,10 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<h1>Welcome to our site!</h1>
+{% if user.is_authenticated %}
+    <p>Hello, {{ user.username }}!</p>
+{% else %}
+    <p>Please login or signup.</p>
+{% endif %}
+{% endblock %}

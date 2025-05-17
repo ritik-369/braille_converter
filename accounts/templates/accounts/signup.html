@@ -1,0 +1,207 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-6 col-lg-8 col-md-8">
+        <div class="auth-card">
+            <div class="card-header py-4 auth-header">
+                <h4 class="m-0 text-center"><i class="fas fa-user-plus me-2"></i>Create an Account</h4>
+                <p class="text-center text-white-50 mt-2 mb-0">Join our community today</p>
+            </div>
+            <div class="card-body p-5">
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" name="username" id="id_username" 
+                                       placeholder="Choose a username" required>
+                            </div>
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="id_email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" name="email" id="id_email" 
+                                       placeholder="Enter your email" required>
+                            </div>
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" name="password1" id="id_password1" 
+                                   placeholder="Create a password" required>
+                            <button class="btn btn-outline-secondary border-start-0 border" type="button" id="togglePassword1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength mt-2 d-none" id="passwordStrength">
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%;" id="passwordStrengthBar"></div>
+                            </div>
+                            <small class="form-text" id="passwordStrengthText">Password strength</small>
+                        </div>
+                        <small class="form-text text-muted mt-2">
+                            Your password must be at least 8 characters long and not entirely numeric.
+                        </small>
+                        {% if form.password1.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.password1.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password2" class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" name="password2" id="id_password2" 
+                                   placeholder="Confirm your password" required>
+                            <button class="btn btn-outline-secondary border-start-0 border" type="button" id="togglePassword2">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.password2.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="termsCheck" required>
+                        <label class="form-check-label" for="termsCheck">
+                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block w-100 py-2">
+                        <i class="fas fa-user-plus me-2"></i>Register Account
+                    </button>
+                    
+                    <div class="divider">
+                        <span class="divider-text">OR</span>
+                    </div>
+                    
+                    <div class="social-login text-center mb-4">
+                        <a href="#" class="btn btn-outline-secondary rounded-circle mx-1">
+                            <i class="fab fa-google"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary rounded-circle mx-1">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary rounded-circle mx-1">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="mb-3">Already have an account?</p>
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login Instead
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility for both password fields
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const password1 = document.getElementById('id_password1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const password2 = document.getElementById('id_password2');
+        
+        togglePassword1.addEventListener('click', function() {
+            const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+            password1.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+        
+        togglePassword2.addEventListener('click', function() {
+            const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+            password2.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+        
+        // Password strength meter
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        
+        password1.addEventListener('input', function() {
+            const value = this.value;
+            
+            if (value.length > 0) {
+                passwordStrength.classList.remove('d-none');
+                
+                // Calculate strength
+                let strength = 0;
+                if (value.length >= 8) strength += 25;
+                if (value.match(/[a-z]+/)) strength += 25;
+                if (value.match(/[A-Z]+/)) strength += 25;
+                if (value.match(/[0-9]+/)) strength += 25;
+                
+                // Update UI
+                passwordStrengthBar.style.width = strength + '%';
+                
+                if (strength < 50) {
+                    passwordStrengthBar.className = 'progress-bar bg-danger';
+                    passwordStrengthText.textContent = 'Weak password';
+                } else if (strength < 75) {
+                    passwordStrengthBar.className = 'progress-bar bg-warning';
+                    passwordStrengthText.textContent = 'Medium password';
+                } else {
+                    passwordStrengthBar.className = 'progress-bar bg-success';
+                    passwordStrengthText.textContent = 'Strong password';
+                }
+            } else {
+                passwordStrength.classList.add('d-none');
+            }
+        });
+        
+        // Check if passwords match
+        password2.addEventListener('input', function() {
+            if (this.value !== password1.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+</script>
+{% endblock %}

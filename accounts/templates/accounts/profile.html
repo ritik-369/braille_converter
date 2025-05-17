@@ -1,0 +1,84 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e0eafc, #cfdef3);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .profile-container {
+        max-width: 480px;
+        margin: 3rem auto;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        color: #333;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-name {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-email {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 0.75rem;
+    }
+
+    .profile-join-date {
+        font-size: 0.9rem;
+        color: #777;
+    }
+
+    .logout-btn {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 2rem;
+        background: #ef4444;
+        color: white;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background: #dc2626;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-avatar">{{ user.username|first|upper }}</div>
+    <div class="profile-name">{{ user.username }}</div>
+    <div class="profile-email">{{ user.email }}</div>
+    <div class="profile-join-date">Member since {{ user.date_joined|date:"F j, Y" }}</div>
+
+    <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+</div>
+{% endblock %}

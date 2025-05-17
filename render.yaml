@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: your-django-app
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
+    env: python
+    pythonVersion: "3.9.14"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.14
+      - key: DISABLE_COLLECTSTATIC
+        value: 0
+    plan: free
